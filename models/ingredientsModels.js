@@ -1,5 +1,5 @@
 const connection = require('./connection');
-const { ObjectId, ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 
 const createIngredient = async(name, unity, price) => {
   const connect = await connection();
@@ -18,6 +18,13 @@ const findAllIngredients = async() => {
 const findIngredientById = async(id) => {
   const connect = await connection();
   const result = await connect.collection('ingredients').findOne({ _id: ObjectId(id) });
+
+  return result;
+};
+
+const findIngredientByName = async(name) => {
+  const connect = await connection();
+  const result = await connect.collection('ingredients').findOne({ name });
 
   return result;
 };
@@ -43,4 +50,5 @@ module.exports = {
   findIngredientById,
   updateIngredient,
   deleteIngredient,
+  findIngredientByName
 };

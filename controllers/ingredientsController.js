@@ -5,7 +5,7 @@ const {
   validateId, 
   getIngredientById, 
   editIngredient,
-  validateIngredientsEdit
+  eraseIngredient
 } = require("../services/ingredientsService");
 
 const listAllIngredients = async(req, res, next) => {
@@ -52,11 +52,28 @@ const updateIngredientById = async(req, res, next) => {
     validateId(id);
     await getIngredientById(id);
 
-    validateIngredientsEdit(req.body);
+    validateIngredients(req.body);
 
     const result = await editIngredient(id, name, unity, price);
 
-    return res.status(201).json(result);
+    return res.status(202).json(result);
+  } catch (error) {
+    console.error(error.message);
+    next(error);
+  }
+};
+
+const deleteIngredientById = async(req, res, next) => {
+  try {
+    const { id } = req.params;
+    console.log(id)
+    validateId(id);
+    await getIngredientById(id);
+
+
+    const result = await eraseIngredient(id);
+
+    return res.status(202).json(result);
   } catch (error) {
     console.error(error.message);
     next(error);
@@ -67,5 +84,6 @@ module.exports = {
   addIngredient,
   listAllIngredients,
   listIngredientById,
-  updateIngredientById
+  updateIngredientById,
+  deleteIngredientById
 }
