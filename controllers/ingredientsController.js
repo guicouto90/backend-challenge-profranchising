@@ -2,11 +2,11 @@ const {
   validateIngredients, 
   newIngredient, 
   getAllIngredients, 
-  validateId, 
   getIngredientById, 
   editIngredient,
   eraseIngredient
 } = require("../services/ingredientsService");
+const validateId = require("../utils/validIdMongoDB");
 
 const listAllIngredients = async(req, res, next) => {
   try {
@@ -49,7 +49,7 @@ const updateIngredientById = async(req, res, next) => {
   try {
     const { id } = req.params;
     const { name, unity, price } = req.body;
-    validateId(id);
+    validateId(id, 'Ingredient')
     await getIngredientById(id);
 
     validateIngredients(req.body);
@@ -66,10 +66,9 @@ const updateIngredientById = async(req, res, next) => {
 const deleteIngredientById = async(req, res, next) => {
   try {
     const { id } = req.params;
-    console.log(id)
-    validateId(id);
-    await getIngredientById(id);
 
+    validateId(id, 'Ingredient');
+    await getIngredientById(id);
 
     const result = await eraseIngredient(id);
 

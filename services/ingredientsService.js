@@ -1,5 +1,4 @@
 const Joi = require('@hapi/joi');
-const { ObjectId } = require("mongodb")
 const { 
   createIngredient, 
   findIngredientById, 
@@ -38,15 +37,6 @@ const newIngredient = async(name, unity, price) => {
   return ingredient;
 };
 
-const validateId = (id) => {
-  const valid = ObjectId.isValid(id);
-
-  if(valid === false) {
-    const error = { status: 400, message: 'Ingredient Id is not valid' };
-    throw error;
-  }
-};
-
 const getAllIngredients = async() => {
   const ingredients = await findAllIngredients();
 
@@ -79,7 +69,6 @@ const eraseIngredient = async(id) => {
 module.exports = {
   validateIngredients,
   newIngredient,
-  validateId,
   getIngredientById,
   getAllIngredients,
   editIngredient,
