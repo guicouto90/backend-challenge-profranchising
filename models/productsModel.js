@@ -41,7 +41,7 @@ const updateProducts = async(id, name, price, ingredients) => {
 const deleteProduct = async(id) => {
   const connect = await connection();
   await connect.collection('products').deleteOne({_id: ObjectId(id) });
-}
+};
 
 module.exports = {
   createProduct,

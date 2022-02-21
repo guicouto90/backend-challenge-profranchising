@@ -3,8 +3,8 @@ const secret = 'Pr0Fr@NCH!N$!N6';
 
 const generateToken = (user) => {
   const jwtConfig = {
-    expiresIn: 3600,
-    algorithm: 'H256',
+    expiresIn: '7d',
+    algorithm: 'HS256',
   };
 
   const token = jwt.sign({ user }, secret, jwtConfig);

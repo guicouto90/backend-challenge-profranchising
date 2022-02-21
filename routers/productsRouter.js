@@ -1,18 +1,19 @@
 const express = require('express');
 const { listAllProducts, addProduct, updateProductById, deleteProductById, listProductById, addImage } = require('../controllers/productsController');
+const { validateToken } = require('../middlewares/auth');
 const upload = require('../middlewares/upload');
 const productsRouter = express.Router();
 
-productsRouter.get('/', listAllProducts);
+productsRouter.get('/', validateToken, listAllProducts);
 
-productsRouter.get('/:id', listProductById);
+productsRouter.get('/:id', validateToken, listProductById);
 
-productsRouter.post('/', addProduct);
+productsRouter.post('/', validateToken, addProduct);
 
-productsRouter.put('/:id', updateProductById);
+productsRouter.put('/:id', validateToken, updateProductById);
 
-productsRouter.put('/:id/image', upload.single('image'), addImage);
+productsRouter.put('/:id/image', validateToken, upload.single('image'), addImage);
 
-productsRouter.delete('/:id', deleteProductById);
+productsRouter.delete('/:id', validateToken, deleteProductById);
 
 module.exports = productsRouter;

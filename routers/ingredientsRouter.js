@@ -6,16 +6,17 @@ const {
   updateIngredientById, 
   deleteIngredientById 
 } = require('../controllers/ingredientsController');
+const { validateToken } = require('../middlewares/auth');
 const ingredientsRouter = express.Router();
 
-ingredientsRouter.post('/', addIngredient);
+ingredientsRouter.post('/', validateToken, addIngredient);
 
-ingredientsRouter.get('/', listAllIngredients);
+ingredientsRouter.get('/', validateToken, listAllIngredients);
 
-ingredientsRouter.get('/:id', listIngredientById);
+ingredientsRouter.get('/:id', validateToken, listIngredientById);
 
-ingredientsRouter.put('/:id', updateIngredientById);
+ingredientsRouter.put('/:id', validateToken, updateIngredientById);
 
-ingredientsRouter.delete('/:id', deleteIngredientById);
+ingredientsRouter.delete('/:id', validateToken, deleteIngredientById);
 
 module.exports = ingredientsRouter;

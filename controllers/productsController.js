@@ -1,4 +1,5 @@
 const { validateProducts, verifyIngredients, newProduct, getAllProducts, editProduct, eraseProduct, getProductById, newImage } = require("../services/productsService");
+const { verifyAdmin } = require("../services/usersServices");
 const validateId = require("../utils/validIdMongoDB");
 
 const addProduct = async(req, res, next) => {
@@ -6,6 +7,8 @@ const addProduct = async(req, res, next) => {
     const { name, price, ingredients} = req.body;
     validateProducts(req.body);
     await verifyIngredients(ingredients);
+    const { user } = req;
+    await verifyAdmin(user)
 
     const result = await newProduct(name, price, ingredients);
 
@@ -43,12 +46,13 @@ const listProductById = async(req, res, next) => {
 const updateProductById = async(req, res, next) => {
   try {
     const { id } = req.params;
+    const { user } = req;
     const { name, price, ingredients } = req.body;
-    console.log(req.headers.host)
     validateId(id, 'Product');
     await getProductById(id);
     validateProducts(req.body);
     await verifyIngredients(ingredients);
+    await verifyAdmin(user)
 
     const result = await editProduct(id, name, price, ingredients);
    
@@ -63,9 +67,10 @@ const addImage = async(req, res, next) => {
   try {
     const { id } = req.params;
     const { host } = req.headers;
-    console.log(req.file);
     validateId(id, 'Product');
     await getProductById(id);
+    const { user } = req;
+    await verifyAdmin(user)
 
     const result = await newImage(id, host);
 
@@ -81,6 +86,8 @@ const deleteProductById = async(req, res, next) => {
     const { id } = req.params;
     validateId(id, 'Product');
     await getProductById(id);
+    const { user } = req;
+    await verifyAdmin(user)
 
     const result = await eraseProduct(id);
 

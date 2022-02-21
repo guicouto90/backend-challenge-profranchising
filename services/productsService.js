@@ -75,7 +75,7 @@ const newImage = async(id, host) => {
   await insertImage(id, image);
 
   return { _id, name, price, ingredients, image };
-}
+};
 
 module.exports = {
   newProduct,
