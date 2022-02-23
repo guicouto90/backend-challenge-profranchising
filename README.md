@@ -45,7 +45,7 @@ Precisamos de uma rota que retorne todos os produtos e o custo de cada um.
 ## Instruções de uso:
 
 Clone o repositório e instale as dependencias com o comando npm install ou acesse o seguinte link com o deplou da aplicação:
-<LINK DO DEPLOY>
+https://api-profranchising-test.herokuapp.com/
 Para rodar a aplicação é necessário usar o comando npm start.
 Para rodar os testes de integração é comando npm test.
 A aplicação foi desenvolvida utilizando principios da arquitetura MSC.
