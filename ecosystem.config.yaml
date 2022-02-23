@@ -1,0 +1,6 @@
+apps:
+  - name: api-profranchising-test
+    script: ./index.js
+    watch: false
+    exec_mode: cluster
+    instances: 2

@@ -7,9 +7,13 @@ const productsCostsRouter = require('./routers/productCostsRouter');
 const productsRouter = require('./routers/productsRouter');
 const usersRouter = require('./routers/usersRouter');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+
+app.get('/', (req, res) => {
+  return res.status(200).send('<h2>WELCOME, PLEASE TRY ANOTHER ROUTE</h2>')
+})
 
 app.use('/ingredients', ingredientsRouter);
 

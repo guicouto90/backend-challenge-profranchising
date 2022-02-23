@@ -1,6 +1,6 @@
 const mongodb = require('mongodb').MongoClient;
 
-const MONGO_DB_URL = 'mongodb://localhost:27017/ProFranchising';
+const MONGO_DB_URL = process.env.MONGODB_URI || 'mongodb://localhost:27017/ProFranchising';
 const DB_NAME = 'ProFranchising';
 
 module.exports = () => mongodb.connect(MONGO_DB_URL, {
