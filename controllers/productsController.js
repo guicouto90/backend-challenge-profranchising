@@ -1,17 +1,18 @@
+const { calculateCost } = require("../services/productsCostsService");
 const { validateProducts, verifyIngredients, newProduct, getAllProducts, editProduct, eraseProduct, getProductById, newImage } = require("../services/productsService");
 const { verifyAdmin } = require("../services/usersServices");
 const validateId = require("../utils/validIdMongoDB");
 
 const addProduct = async(req, res, next) => {
   try {
-    const { name, price, ingredients} = req.body;
+    const { name, price, quantity, ingredients} = req.body;
     validateProducts(req.body);
     await verifyIngredients(ingredients);
     const { user } = req;
     await verifyAdmin(user)
 
-    const result = await newProduct(name, price, ingredients);
-
+    const result = await newProduct(name, price, quantity, ingredients);
+    await calculateCost(result._id);
     return res.status(201).json(result);
   } catch (error) {
     console.error(error.message);
@@ -47,14 +48,14 @@ const updateProductById = async(req, res, next) => {
   try {
     const { id } = req.params;
     const { user } = req;
-    const { name, price, ingredients } = req.body;
+    const { name, price, quantity, ingredients } = req.body;
     validateId(id, 'Product');
     await getProductById(id);
     validateProducts(req.body);
     await verifyIngredients(ingredients);
     await verifyAdmin(user)
 
-    const result = await editProduct(id, name, price, ingredients);
+    const result = await editProduct(id, name, quantity, price, ingredients);
    
     return res.status(202).json(result);
   } catch (error) {

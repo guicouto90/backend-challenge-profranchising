@@ -1,9 +1,9 @@
 const { ObjectId } = require('mongodb');
 const connection = require('./connection');
 
-const createProduct = async(name, price, ingredients) => {
+const createProduct = async(name, price, quantity, ingredients) => {
   const connect = await connection();
-  const { insertedId } = await connect.collection('products').insertOne({ name, price, ingredients });
+  const { insertedId } = await connect.collection('products').insertOne({ name, price, quantity, ingredients });
   
   return insertedId;
 };
@@ -30,11 +30,11 @@ const findProductById = async(id) => {
   return result;
 }
 
-const updateProducts = async(id, name, price, ingredients) => {
+const updateProducts = async(id, name, price, quantity, ingredients) => {
   const connect = await connection();
   await connect.collection('products').updateOne(
     { _id: ObjectId(id) },
-    { $set: { name, price, ingredients } }
+    { $set: { name, price, quantity, ingredients } }
   )
 };
 

@@ -2,7 +2,7 @@ const connection = require('./connection');
 
 const findAllUsers = async() => {
   const connect = await connection();
-  const result = await connect.collection('users').find({}).toArray();
+  const result = await connect.collection('users').find({}).project({ password: 0}).toArray();
 
   return result;
 };
