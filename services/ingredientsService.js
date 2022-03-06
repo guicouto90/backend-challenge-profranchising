@@ -6,6 +6,8 @@ const {
   updateIngredient, 
   deleteIngredient 
 } = require('../models/ingredientsModels');
+const validateId = require('../utils/validIdMongoDB');
+const { verifyAdmin } = require('./usersServices');
 
 const ingredientsSchema = Joi.object({
   name: Joi.string().required().not().empty(),
@@ -25,7 +27,10 @@ const validateIngredients = (body) => {
   }
 };
 
-const newIngredient = async(name, unity, price) => {
+const newIngredient = async(body, user) => {
+  const { name, unity, price } = body;
+  validateIngredients(body);
+  await verifyAdmin(user);
   const ingredientId = await createIngredient(name, unity, price);
   const ingredient = {
     _id: ingredientId,
@@ -44,6 +49,7 @@ const getAllIngredients = async() => {
 }
 
 const getIngredientById = async(id) => {
+  validateId(id);
   const ingredient = await findIngredientById(id);
   if(!ingredient) {
     const error = { status: 404, message: 'Ingredient not found' };
@@ -53,17 +59,25 @@ const getIngredientById = async(id) => {
   return ingredient;
 };
 
-const editIngredient = async(id, name, unity, price) => {
-  await updateIngredient(id, name, unity, price);
+const editIngredient = async(id, user, body) => {
+  const { name, unity, price } = body;
 
+  validateId(id, 'Ingredient');
+  await getIngredientById(id);
+  await verifyAdmin(user);
+  validateIngredients(body);
+
+  await updateIngredient(id, name, unity, price);
   return { message: `Ingredient with id:${id} edited `};
 }
 
-const eraseIngredient = async(id) => {
+const eraseIngredient = async(id, user) => {
+  validateId(id, 'Ingredient');
+  await getIngredientById(id);
+  await verifyAdmin(user);
+
   await deleteIngredient(id);
-
   return { message: `Ingredient with id:${id} deleted `};
-
 }
 
 module.exports = {

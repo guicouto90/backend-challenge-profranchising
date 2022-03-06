@@ -15,20 +15,6 @@ const validateUser = (body) => {
   if(error) throw error;
 };
 
-const newUser = async(name, username, password, role) => {
-  const userId = await createUser(name, username, password, role);
-  const token = generateToken(username);
-  const newUser = {
-    _id: userId,
-    name, 
-    username, 
-    role,
-    token
-  }
-
-  return newUser;
-}
-
 const getAllUsers = async() => {
   const result = await findAllUsers();
 
@@ -59,7 +45,24 @@ const verifyAdmin = async(username) => {
     const error = { status: 401, message: 'Permission denied'};
     throw error;
   }
-}
+};
+
+const newUser = async(body) => {
+  const { name, username, password, role } = body;
+  validateUser(body);
+  await verifyUsername(username);
+  const userId = await createUser(name, username, password, role);
+  const token = generateToken(username);
+  const newUser = {
+    _id: userId,
+    name, 
+    username, 
+    role,
+    token
+  }
+
+  return newUser;
+};
 
 module.exports = {
   validateUser,

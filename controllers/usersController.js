@@ -1,4 +1,4 @@
-const { getAllUsers, validateUser, newUser, verifyUsername } = require("../services/usersServices");
+const { getAllUsers, newUser } = require("../services/usersServices");
 
 const listAllUsers = async(req,res,next) => {
   try {
@@ -13,10 +13,7 @@ const listAllUsers = async(req,res,next) => {
 
 const addUser = async(req,res,next) => {
   try {
-    const { name, username, password, role } = req.body;
-    validateUser(req.body);
-    await verifyUsername(username);
-    const result = await newUser(name, username, password, role);
+    const result = await newUser(req.body);
 
     return res.status(201).json(result);
   } catch (error) {

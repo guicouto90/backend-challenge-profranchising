@@ -22,7 +22,10 @@ const verifyPassword = async(username, password) => {
   }
 };
 
-const newLogin = async(username, password) => {
+const newLogin = async(body) => {
+  const { username, password } = body;
+  validateLogin(body);
+  await verifyPassword(username, password);
   await createLogin(username, password);
   const token = generateToken(username);
 

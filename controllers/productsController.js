@@ -1,18 +1,9 @@
-const { calculateCost } = require("../services/productsCostsService");
-const { validateProducts, verifyIngredients, newProduct, getAllProducts, editProduct, eraseProduct, getProductById, newImage } = require("../services/productsService");
-const { verifyAdmin } = require("../services/usersServices");
-const validateId = require("../utils/validIdMongoDB");
+const { newProduct, getAllProducts, editProduct, eraseProduct, getProductById, newImage } = require("../services/productsService");
 
 const addProduct = async(req, res, next) => {
   try {
-    const { name, price, quantity, ingredients} = req.body;
-    validateProducts(req.body);
-    await verifyIngredients(ingredients);
-    const { user } = req;
-    await verifyAdmin(user)
+    const result = await newProduct(req.body, req.user);
 
-    const result = await newProduct(name, price, quantity, ingredients);
-    await calculateCost(result._id);
     return res.status(201).json(result);
   } catch (error) {
     console.error(error.message);
@@ -33,9 +24,7 @@ const listAllProducts = async(req, res, next) => {
 
 const listProductById = async(req, res, next) => {
   try {
-    const { id } = req.params;
-    validateId(id, 'Product');
-    const result = await getProductById(id);
+    const result = await getProductById(req.params.id);
 
     return res.status(200).json(result);
   } catch (error) {
@@ -46,17 +35,19 @@ const listProductById = async(req, res, next) => {
 
 const updateProductById = async(req, res, next) => {
   try {
-    const { id } = req.params;
-    const { user } = req;
-    const { name, price, quantity, ingredients } = req.body;
-    validateId(id, 'Product');
-    await getProductById(id);
-    validateProducts(req.body);
-    await verifyIngredients(ingredients);
-    await verifyAdmin(user)
-
-    const result = await editProduct(id, name, quantity, price, ingredients);
+    const result = await editProduct(req.params.id, req.user, req.body);
    
+    return res.status(202).json(result);
+  } catch (error) {
+    console.error(error.message);
+    next(error);
+  }
+};
+
+const deleteProductById = async(req, res, next) => {
+  try {
+    const result = await eraseProduct(req.params.id, req.user);
+
     return res.status(202).json(result);
   } catch (error) {
     console.error(error.message);
@@ -66,31 +57,7 @@ const updateProductById = async(req, res, next) => {
 
 const addImage = async(req, res, next) => {
   try {
-    const { id } = req.params;
-    const { host } = req.headers;
-    validateId(id, 'Product');
-    await getProductById(id);
-    const { user } = req;
-    await verifyAdmin(user)
-
-    const result = await newImage(id, host);
-
-    return res.status(202).json(result);
-  } catch (error) {
-    console.error(error.message);
-    next(error);
-  }
-}
-
-const deleteProductById = async(req, res, next) => {
-  try {
-    const { id } = req.params;
-    validateId(id, 'Product');
-    await getProductById(id);
-    const { user } = req;
-    await verifyAdmin(user)
-
-    const result = await eraseProduct(id);
+    const result = await newImage(req.params.id, req.headers.host, req.user);
 
     return res.status(202).json(result);
   } catch (error) {
